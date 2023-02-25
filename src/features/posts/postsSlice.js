@@ -2,8 +2,8 @@ import { createSlice } from "@reduxjs/toolkit"
 import { nanoid } from "@reduxjs/toolkit"
 
 const initialState = [
-  { id: "1", title: "First Post!", content: "Hello!", userId: "1" },
-  { id: "2", title: "Second Post", content: "More text", userId: "2" },
+  { id: "1", title: "First Post!", content: "Hello!", user: "1" },
+  { id: "2", title: "Second Post", content: "More text", user: "2" },
 ]
 
 const postsSlice = createSlice({
