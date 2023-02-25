@@ -15,13 +15,13 @@ export const PostsList = () => {
   const renderedPosts = orderedPosts.map((post) => (
     <article className="post-excerpt" key={post.id}>
       <h3>{post.title}</h3>
+      <PostAuthor userId={post.user} />
+      <TimeAgo timestamp={post.date} />
       <p className="post-content">{post.content.substring(0, 100)}</p>
+      <ReactionButtons post={post} />
       <Link to={`/posts/${post.id}`} className="button muted-button">
         View Post
       </Link>
-      <PostAuthor userId={post.user} />
-      <TimeAgo timestamp={post.date} />
-      <ReactionButtons post={post} />
     </article>
   ))
 
