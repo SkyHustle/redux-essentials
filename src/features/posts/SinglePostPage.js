@@ -1,11 +1,13 @@
 import React from "react"
-import { useSelector } from "react-redux"
+import { useSelector, useDispatch } from "react-redux"
 import { Link } from "react-router-dom"
 import { PostAuthor } from "./PostAuthor"
 import { ReactionButtons } from "./ReactionButtons"
+import { postDeleted } from "./postsSlice"
 
 export const SinglePostPage = ({ match }) => {
   const { postId } = match.params
+  const dispatch = useDispatch()
 
   const post = useSelector((state) =>
     state.posts.find((post) => post.id === postId)
@@ -27,6 +29,13 @@ export const SinglePostPage = ({ match }) => {
         <p className="post-content">{post.content}</p>
         <Link to={`/editPost/${post.id}`} className="button">
           Edit Post
+        </Link>
+        <Link
+          onClick={() => dispatch(postDeleted(post))}
+          to={`/`}
+          className="button"
+        >
+          Delete Post
         </Link>
         <ReactionButtons post={post} />
       </article>
