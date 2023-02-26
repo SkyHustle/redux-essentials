@@ -4,10 +4,10 @@ import { Link } from "react-router-dom"
 import { PostAuthor } from "./PostAuthor"
 import { TimeAgo } from "./TimeAgo"
 import { ReactionButtons } from "./ReactionButtons"
-import { postDeleted } from "./postsSlice"
+import { selectAllPosts } from "./postsSlice"
 
 export const PostsList = () => {
-  const posts = useSelector((state) => state.posts)
+  const posts = useSelector(selectAllPosts)
   const dispatch = useDispatch()
 
   const orderedPosts = posts
@@ -24,12 +24,6 @@ export const PostsList = () => {
       <Link to={`/posts/${post.id}`} className="button muted-button">
         View Post
       </Link>
-      <button
-        onClick={() => dispatch(postDeleted(post))}
-        className="button muted-button"
-      >
-        Delete Post
-      </button>
     </article>
   ))
 
