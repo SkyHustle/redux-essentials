@@ -2,13 +2,15 @@ import { useSelector, useDispatch } from "react-redux"
 import { Link } from "react-router-dom"
 import { PostAuthor } from "./PostAuthor"
 import { ReactionButtons } from "./ReactionButtons"
-import { selectPostById, postDeleted } from "./postsSlice"
+import { postDeleted } from "./postsSlice"
 
 export const SinglePostPage = ({ match }) => {
   const { postId } = match.params
   const dispatch = useDispatch()
 
-  const post = useSelector((state) => selectPostById(state, postId))
+  const post = useSelector((state, postId) =>
+    state.posts.posts.find((post) => post.id === postId)
+  )
 
   if (!post) {
     return (
