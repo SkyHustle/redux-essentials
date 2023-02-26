@@ -23,11 +23,11 @@ export const SinglePostPage = ({ match }) => {
     <section>
       <article className="post">
         <h2>{post.title}</h2>
+        <PostAuthor userId={post.user} />
         <p className="post-content">{post.content}</p>
         <Link to={`/editPost/${post.id}`} className="button">
           Edit Post
         </Link>
-        <PostAuthor userId={post.user} />
         <ReactionButtons post={post} />
       </article>
     </section>

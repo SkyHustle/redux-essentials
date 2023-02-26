@@ -1,12 +1,14 @@
 import React from "react"
-import { useSelector } from "react-redux"
+import { useSelector, useDispatch } from "react-redux"
 import { Link } from "react-router-dom"
 import { PostAuthor } from "./PostAuthor"
 import { TimeAgo } from "./TimeAgo"
 import { ReactionButtons } from "./ReactionButtons"
+import { postDeleted } from "./postsSlice"
 
 export const PostsList = () => {
   const posts = useSelector((state) => state.posts)
+  const dispatch = useDispatch()
 
   const orderedPosts = posts
     .slice()
@@ -17,11 +19,17 @@ export const PostsList = () => {
       <h3>{post.title}</h3>
       <PostAuthor userId={post.user} />
       <TimeAgo timestamp={post.date} />
-      <p className="post-content">{post.content.substring(0, 100)}</p>
+      <p className="post-content">{post.content.substring(0, 100)}...</p>
       <ReactionButtons post={post} />
       <Link to={`/posts/${post.id}`} className="button muted-button">
         View Post
       </Link>
+      <button
+        onClick={() => dispatch(postDeleted(post))}
+        className="button muted-button"
+      >
+        Delete Post
+      </button>
     </article>
   ))
 
