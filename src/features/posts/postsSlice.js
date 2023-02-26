@@ -32,27 +32,21 @@ export const fetchPosts = createAsyncThunk("posts/fetchPosts", async () => {
   return response.data
 })
 
+export const addNewPost = createAsyncThunk(
+  "posts/addNewPost",
+  // The payload creator receives the partial `{title, content, user}` object
+  async (initialPost) => {
+    // We send the initial data to the fake API server
+    const response = await client.post("/fakeApi/posts", initialPost)
+    // The response includes the complete post object, including unique ID
+    return response.data
+  }
+)
+
 const postsSlice = createSlice({
   name: "posts",
   initialState,
   reducers: {
-    postAdded: {
-      reducer(state, action) {
-        state.posts.push(action.payload)
-      },
-      prepare(title, content, userId) {
-        return {
-          payload: {
-            id: nanoid(),
-            date: new Date().toISOString(),
-            user: userId,
-            title,
-            content,
-            reactions: { thumbsUp: 0, hooray: 0, heart: 0, rocket: 0, eyes: 0 },
-          },
-        }
-      },
-    },
     postUpdated(state, action) {
       const { id, title, content } = action.payload
       const existingPost = state.posts.find((post) => post.id === id)
@@ -86,11 +80,14 @@ const postsSlice = createSlice({
         state.status = "failed"
         state.error = action.error.message
       })
+      .addCase(addNewPost.fulfilled, (state, action) => {
+        // We can directly add the new post object to our posts array
+        state.posts.push(action.payload)
+      })
   },
 })
 
-export const { postAdded, postUpdated, reactionAdded, postDeleted } =
-  postsSlice.actions
+export const { postUpdated, reactionAdded, postDeleted } = postsSlice.actions
 
 export default postsSlice.reducer
 
