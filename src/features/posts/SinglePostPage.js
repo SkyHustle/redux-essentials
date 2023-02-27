@@ -8,7 +8,7 @@ export const SinglePostPage = ({ match }) => {
   const { postId } = match.params
   const dispatch = useDispatch()
 
-  const post = useSelector((state, postId) =>
+  const post = useSelector((state) =>
     state.posts.posts.find((post) => post.id === postId)
   )
 
