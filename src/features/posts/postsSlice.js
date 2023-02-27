@@ -1,4 +1,4 @@
-import { createSlice, nanoid, createAsyncThunk } from "@reduxjs/toolkit"
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
 import { client } from "../../api/client"
 
 export const fetchPosts = createAsyncThunk("posts/fetchPosts", async () => {

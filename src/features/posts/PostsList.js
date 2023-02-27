@@ -14,7 +14,7 @@ export const PostsList = () => {
     if (postStatus === "pending") {
       dispatch(fetchPosts())
     }
-  }, [postStatus])
+  }, [postStatus, dispatch])
 
   let content
   if (postStatus === "loading") {
