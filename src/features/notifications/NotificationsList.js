@@ -1,7 +1,7 @@
-import { useLayoutEffect } from "react"
+import { useEffect } from "react"
 import { useSelector, useDispatch } from "react-redux"
 import { formatDistanceToNow, parseISO } from "date-fns"
-import { allNotificationsRead, fetchNotifications } from "./notificationsSlice"
+import { allNotificationsRead } from "./notificationsSlice"
 import classnames from "classnames"
 
 export const NotificationsList = () => {
@@ -9,7 +9,7 @@ export const NotificationsList = () => {
   const users = useSelector((state) => state.users)
   const dispatch = useDispatch()
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     dispatch(allNotificationsRead())
   })
 
@@ -35,7 +35,7 @@ export const NotificationsList = () => {
       </div>
     )
   })
-  console.log("render")
+
   return (
     <section className="notificationsList">
       <h2>Notifications</h2>

@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
+import { createSlice, createAsyncThunk, createSelector } from "@reduxjs/toolkit"
 import { client } from "../../api/client"
 
 export const fetchPosts = createAsyncThunk("posts/fetchPosts", async () => {
@@ -68,6 +68,11 @@ const postsSlice = createSlice({
 export const { postUpdated, reactionAdded, postDeleted } = postsSlice.actions
 
 export default postsSlice.reducer
+
+export const selectPostsByUser = createSelector(
+  [(state) => state.posts.posts, (state, userId) => userId],
+  (posts, userId) => posts.filter((post) => post.user === userId)
+)
 
 // export const selectAllPosts = (state) => state.posts.posts
 // export const selectPostById = (state, postId) =>
