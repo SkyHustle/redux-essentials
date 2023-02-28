@@ -37,7 +37,6 @@ const postsSlice = createSlice({
   reducers: {
     postUpdated(state, action) {
       const { id, title, content } = action.payload
-      // const existingPost = state.posts.find((post) => post.id === id)
       const existingPost = state.entities[id]
       if (existingPost) {
         existingPost.title = title
@@ -49,7 +48,6 @@ const postsSlice = createSlice({
     },
     reactionAdded(state, action) {
       const { postId, reaction } = action.payload
-      // const existingPost = state.posts.find((post) => post.id === postId)
       const existingPost = state.entities[postId]
       if (existingPost) {
         existingPost.reactions[reaction]++
@@ -63,9 +61,6 @@ const postsSlice = createSlice({
       })
       .addCase(fetchPosts.fulfilled, (state, action) => {
         state.status = "succeeded"
-        // Add any fetched posts to the array
-        // state.posts = state.posts.concat(action.payload)
-
         // Add any fetched posts to the array
         // Use the `upsertMany` reducer as a mutating update utility
         postsAdapter.upsertMany(state, action.payload)
@@ -95,7 +90,3 @@ export const selectPostsByUser = createSelector(
   [(state) => state.posts.posts, (state, userId) => userId],
   (posts, userId) => posts.filter((post) => post.user === userId)
 )
-
-// export const selectAllPosts = (state) => state.posts.posts
-// export const selectPostById = (state, postId) =>
-//   state.posts.posts.find((post) => post.id === postId)
