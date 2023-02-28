@@ -10,10 +10,6 @@ export const UserPage = ({ match }) => {
     state.users.find((user) => user.id === userId)
   )
 
-  // const postsForUser = useSelector((state) => {
-  //   const allPosts = state.posts.posts
-  //   return allPosts.filter((post) => post.user === userId)
-  // })
   const postsForUser = useSelector((state) => selectPostsByUser(state, userId))
 
   const postTitles = postsForUser.map((post) => (
