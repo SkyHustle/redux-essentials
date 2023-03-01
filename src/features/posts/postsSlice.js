@@ -43,8 +43,7 @@ const postsSlice = createSlice({
       }
     },
     postDeleted(state, action) {
-      // won't work anymore, returned data isn't normalized by postAdapter
-      // return state.posts.filter((post) => post.id !== action.payload.id)
+      postsAdapter.removeOne(state, action.payload.id)
     },
     reactionAdded(state, action) {
       const { postId, reaction } = action.payload
