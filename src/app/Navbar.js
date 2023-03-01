@@ -1,10 +1,13 @@
 import { useDispatch, useSelector } from "react-redux"
-import { fetchNotifications } from "../features/notifications/notificationsSlice"
+import {
+  fetchNotifications,
+  selectAllNotifications,
+} from "../features/notifications/notificationsSlice"
 import { Link } from "react-router-dom"
 
 export const Navbar = () => {
   const dispatch = useDispatch()
-  const notifications = useSelector((state) => state.notifications)
+  const notifications = useSelector(selectAllNotifications)
 
   const fetchNewNotifications = () => {
     dispatch(fetchNotifications())
