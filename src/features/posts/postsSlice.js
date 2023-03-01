@@ -1,7 +1,6 @@
 import {
   createSlice,
   createAsyncThunk,
-  createSelector,
   createEntityAdapter,
 } from "@reduxjs/toolkit"
 import { client } from "../../api/client"
@@ -44,6 +43,7 @@ const postsSlice = createSlice({
       }
     },
     postDeleted(state, action) {
+      // won't work anymore, returned data isn't normalized by postAdapter
       // return state.posts.filter((post) => post.id !== action.payload.id)
     },
     reactionAdded(state, action) {
@@ -85,8 +85,3 @@ export const {
   selectIds: selectPostIds,
   // Pass in a selector that returns the posts slice of state
 } = postsAdapter.getSelectors((state) => state.posts)
-
-// export const selectPostsByUser = createSelector(
-//   [(state) => state.posts.posts, (state, userId) => userId],
-//   (posts, userId) => posts.filter((post) => post.user === userId)
-// )
