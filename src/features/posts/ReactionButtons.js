@@ -14,7 +14,7 @@ export const ReactionButtons = ({ post }) => {
   const dispatch = useDispatch()
 
   const handleClick = (name) => {
-    dispatch(reactionAdded({ postId: post.id, reaction: name }))
+    dispatch(reactionAdded({ id: post.id, reaction: name }))
   }
 
   const reactionButtons = Object.entries(reactionEmoji).map(([name, emoji]) => {

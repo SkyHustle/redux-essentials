@@ -35,18 +35,24 @@ const postsSlice = createSlice({
   initialState,
   reducers: {
     postUpdated(state, action) {
-      const { id, title, content } = action.payload
-      postsAdapter.updateOne(state, { id: id, changes: { title, content } })
+      postsAdapter.updateOne(state, action.payload)
     },
     postDeleted(state, action) {
       postsAdapter.removeOne(state, action.payload.id)
     },
     reactionAdded(state, action) {
-      const { postId, reaction } = action.payload
-      const existingPost = state.entities[postId]
-      if (existingPost) {
-        existingPost.reactions[reaction]++
-      }
+      const { id, reaction } = action.payload
+      const reactions = state.entities[id].reactions
+      const updatedReactionCount = reactions[reaction] + 1
+      postsAdapter.updateOne(state, {
+        id,
+        changes: {
+          reactions: {
+            ...reactions,
+            [reaction]: updatedReactionCount,
+          },
+        },
+      })
     },
   },
   extraReducers(builder) {
@@ -64,12 +70,13 @@ const postsSlice = createSlice({
         state.status = "failed"
         state.error = action.error.message
       })
-      .addCase(addNewPost.fulfilled, postsAdapter.addOne)
+      .addCase(addNewPost.fulfilled, (state, action) => {
+        postsAdapter.addOne(state, action.payload)
+      })
   },
 })
 
-export const { postAdded, postUpdated, reactionAdded, postDeleted } =
-  postsSlice.actions
+export const { postUpdated, postDeleted, reactionAdded } = postsSlice.actions
 
 export default postsSlice.reducer
 
