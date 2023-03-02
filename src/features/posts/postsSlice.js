@@ -85,5 +85,6 @@ export const {
   selectAll: selectAllPosts,
   selectById: selectPostById,
   selectIds: selectPostIds,
-  // Pass in a selector that returns the posts slice of state
+  selectEntities,
+  selectTotal,
 } = postsAdapter.getSelectors((state) => state.posts)

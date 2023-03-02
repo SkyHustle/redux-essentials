@@ -18,7 +18,9 @@ const usersSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers(builder) {
-    builder.addCase(fetchUsers.fulfilled, usersAdapter.setAll)
+    builder.addCase(fetchUsers.fulfilled, (state, action) => {
+      usersAdapter.setAll(state, action.payload)
+    })
   },
 })
 
