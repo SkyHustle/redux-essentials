@@ -1,31 +1,23 @@
-import { useEffect } from "react"
-import { useSelector, useDispatch } from "react-redux"
 import { Spinner } from "../../components/Spinner"
 import { PostExcerpt } from "./PostExcerpt"
-
-import { fetchPosts, selectPostIds } from "./postsSlice"
+import { useGetPostsQuery } from "../api/apiSlice"
 
 export const PostsList = () => {
-  const dispatch = useDispatch()
-  const orderedPostIds = useSelector(selectPostIds)
-  const postStatus = useSelector((state) => state.posts.status)
-  const error = useSelector((state) => state.posts.error)
-
-  useEffect(() => {
-    if (postStatus === "idle") {
-      dispatch(fetchPosts())
-    }
-  }, [postStatus, dispatch])
+  const {
+    data: posts,
+    isLoading,
+    isSuccess,
+    isError,
+    error,
+  } = useGetPostsQuery()
 
   let content
-  if (postStatus === "loading") {
+  if (isLoading) {
     content = <Spinner text="Loading..." />
-  } else if (postStatus === "succeeded") {
-    content = orderedPostIds.map((postId) => (
-      <PostExcerpt key={postId} postId={postId} />
-    ))
-  } else if (postStatus === "failed") {
-    content = <div>{error}</div>
+  } else if (isSuccess) {
+    content = posts.map((post) => <PostExcerpt key={post.id} post={post} />)
+  } else if (isError) {
+    content = <div>{error.toString()}</div>
   }
 
   return (
