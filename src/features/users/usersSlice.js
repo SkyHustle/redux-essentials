@@ -16,7 +16,18 @@ import { apiSlice } from "../api/apiSlice"
 // const usersAdapter = createEntityAdapter()
 // const initialState = usersAdapter.getInitialState()
 
-export const selectUsersResult = apiSlice.endpoints.getUsers.select()
+// same object as apiSlice, important when using TypeScript
+export const extendedApiSlice = apiSlice.injectEndpoints({
+  endpoints: (builder) => ({
+    getUsers: builder.query({
+      query: () => "/users",
+    }),
+  }),
+})
+
+export const { useGetUsersQuery } = extendedApiSlice
+
+export const selectUsersResult = extendedApiSlice.endpoints.getUsers.select()
 
 const emptyUsers = []
 
