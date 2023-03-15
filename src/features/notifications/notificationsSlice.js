@@ -1,6 +1,17 @@
-import { createSelector } from "@reduxjs/toolkit"
+import {
+  createAction,
+  createSlice,
+  createEntityAdapter,
+  createSelector,
+  isAnyOf,
+} from "@reduxjs/toolkit"
+
 import { forceGenerateNotifications } from "../../api/server"
 import { apiSlice } from "../api/apiSlice"
+
+const notificationsReceived = createAction(
+  "notifications/notificationsReceived"
+)
 
 export const extendedApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -8,7 +19,7 @@ export const extendedApi = apiSlice.injectEndpoints({
       query: () => "/notifications",
       async onCacheEntryAdded(
         arg,
-        { updateCachedData, cacheDataLoaded, cacheEntryRemoved }
+        { updateCachedData, cacheDataLoaded, cacheEntryRemoved, dispatch }
       ) {
         // create a websocket connection when the cache subscription starts
         const ws = new WebSocket("ws://localhost")
@@ -28,6 +39,8 @@ export const extendedApi = apiSlice.injectEndpoints({
                   draft.push(...message.payload)
                   draft.sort((a, b) => b.date.localeCompare(a.date))
                 })
+                // Dispatch an additional action so we can track "read" state
+                dispatch(notificationsReceived(message.payload))
                 break
               }
               default:
@@ -51,6 +64,42 @@ export const extendedApi = apiSlice.injectEndpoints({
 
 export const { useGetNotificationsQuery } = extendedApi
 
+const notificationsAdapter = createEntityAdapter()
+
+const matchNotificationsReceived = isAnyOf(
+  notificationsReceived,
+  extendedApi.endpoints.getNotifications.matchFulfilled
+)
+
+const notificationsSlice = createSlice({
+  name: "notifications",
+  initialState: notificationsAdapter.getInitialState(),
+  reducers: {
+    allNotificationsRead(state, action) {
+      Object.values(state.entities).forEach((notification) => {
+        notification.read = true
+      })
+    },
+  },
+  extraReducers(builder) {
+    builder.addMatcher(matchNotificationsReceived, (state, action) => {
+      // Add client-side metadata for tracking new notifications
+      const notificationsMetadata = action.payload.map((notification) => ({
+        id: notification.id,
+        read: false,
+        isNew: true,
+      }))
+
+      Object.values(state.entities).forEach((notification) => {
+        // Any notifications we've read are no longer new
+        notification.isNew = !notification.read
+      })
+
+      notificationsAdapter.upsertMany(state, notificationsMetadata)
+    })
+  },
+})
+
 const emptyNotifications = []
 
 export const selectNotificationsResult =
@@ -68,3 +117,12 @@ export const fetchNotificationsWebsocket = () => (dispatch, getState) => {
   // Hardcode a call to the mock server to simulate a server push scenario over websockets
   forceGenerateNotifications(latestTimestamp)
 }
+
+export const { allNotificationsRead } = notificationsSlice.actions
+
+export default notificationsSlice.reducer
+
+export const {
+  selectAll: selectNotificationsMetadata,
+  selectEntities: selectMetadataEntities,
+} = notificationsAdapter.getSelectors((state) => state.notifications)
