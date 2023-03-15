@@ -44,8 +44,6 @@ export const apiSlice = createApi({
   }),
 })
 
-console.log("apiSlice ", apiSlice)
-
 // Export the auto-generated hook for the `getPosts` query endpoint
 export const {
   useGetPostsQuery,
